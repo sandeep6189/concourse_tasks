@@ -11,4 +11,4 @@ jobs:
   plan:
   - get: concourse_tasks
   - task: deploy_nsp
-    file: deploy_nsp.yml
+    file: concourse_tasks/deploy_nsp.yml

@@ -6,5 +6,5 @@ image_resource:
   source: {repository: busybox}
 
 run:
-  path: concourse_tasks/setup_nsp.py
-  args: ["--nsp_deploy","-c","nsp_config.json"]
+  path: ls
+  args: ["-l"]
