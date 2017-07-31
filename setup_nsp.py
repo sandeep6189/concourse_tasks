@@ -507,7 +507,9 @@ def parseInputCommand(argc,argv):
 if __name__ == '__main__':
 	config_file = parseInputCommand(len(sys.argv),sys.argv)
 	nsp_obj = parseConfigFile(config_file)
-	if "--nsp_deploy" in sys.argv:
+	cmd = "pip install urllib3"
+	call(cmd.split())
+        if "--nsp_deploy" in sys.argv:
 		print "Stage 1: Deploying NSP OVF on VC"
 		#deployNSP(nsp_obj)
 		#print "Sleeping for 10 mins for OVF deployment"
