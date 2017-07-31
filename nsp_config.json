@@ -1,0 +1,125 @@
+{
+	"NSP":{
+		"basic":{
+			"proxy": "https://10.0.0.214",
+			"ipam_exchange": "exchange",
+			"cloud_type": "VC",
+			"vcd_enabled": false,
+			"is_default": true
+		},
+		"common":{
+			"host": "10.0.0.214",
+			"username": "admin",
+			"password": "VMware123!",
+			"root_password": "VMware123!"
+		},
+		"container":{
+			"datastore": "datastore-19",
+			"resource_pool": "resgroup-8",
+			"global_name": "GlobalContainer",
+			"local_name": "FleetContainer",
+			"folder": "group-v3"
+		},
+		"deploy":{
+			"vm_folder": "/",
+			"hostname": "nsp.vrack.evolabs.corp",
+			"dns": "10.0.0.4",
+			"datastore":"vsanDatastore",
+			"prefix": "24",
+			"network": "SDDC-DPortGroup-Mgmt",
+			"gateway": "10.0.0.250",
+			"ntp": "10.0.0.4",
+			"ovf_path": "/dbc/sc-dbc1213/agarwallas/nsp/nsp.ovf",
+			"vm_name": "onprem_nsp",
+			"ovftool_exe_path": "/build/toolchain/lin64/ovftool-4.1.0/ovftool"
+		},
+		"networks":{
+			"name": "External2",
+			"description": "Backing by vc network",
+			"l3TenantManaged": false,
+			"ipScopes": [
+				{
+					"gateway": "10.0.0.250",
+					"networkIpRanges": [
+						{
+							"startAddress": "10.0.0.85",
+							"endAddress": "10.0.0.95"
+						}
+					],
+					"prefixLength": 24,
+					"primaryDns": "10.0.0.4",
+					"dnsSuffix": "vsphere.local"
+				}
+			],
+			"backings":[{
+				"backingId": "dvportgroup-11",
+				"vCenterInstanceUuid": "1f69b66d-0dcd-47a0-9941-ba6dce0be747"
+			}],
+			"enterprise": "DEFAULT"
+		},
+		"fleet_site":{
+			"siteId" : "",
+			"deploymentContainerId": "",
+			"rowType": "site",
+			"networks": {
+				"mgmtNetwork":{
+					"id" : "dvportgroup-11",
+					"ipPool": {
+						"startAddress":"",
+						"endAddress":"",
+						"prefixLength":24,
+						"gateway":"10.0.0.250"
+					},
+					"networkType": "DistributedVirtualPortgroup"
+				}
+			}
+		},
+		"fleet_resource":{
+			"siteId" : "",
+			"deploymentContainerId":"",
+			"rowType" : "resource",
+			"resourceId": "",
+			"networks" : {
+					"externalNetwork" : {
+						"networkType" : "DistributedVirtualPortgroup",
+						"ipPool" : {
+							"startAddress" : "10.0.0.211",
+							"endAddress" : "10.0.0.211",
+							"prefixLength" : 24,
+							"gateway" : "10.0.0.250"
+						},
+						"id" : "dvportgroup-11"
+					},
+					"vmotionNetwork" : {
+						"networkType" : "DistributedVirtualPortgroup",
+						"ipPool" : {
+							"startAddress" : "192.168.1.170",
+							"endAddress" : "192.168.1.179",
+							"prefixLength" : 24,
+							"gateway" : "192.168.1.1"
+						},
+						"id" : "dvportgroup-13"
+					}
+				},
+				"resourceDetails" : [ ]
+		}
+	},
+	"VC":{
+		"host":"10.0.0.5",
+		"username": "administrator@vsphere.local",
+		"password": "VMware123!",
+		"uuid": "1f69b66d-0dcd-47a0-9941-ba6dce0be747",
+		"datacenter_name": "SDDC-Datacenter",
+		"cluster_name": "vRack-Cluster"
+	},
+	"NSX":{
+		"host":"10.0.0.6",
+		"username": "admin",
+		"password": "VMware123!"
+	},
+	"LOOKUP":{
+		"provider_type":"PSC",
+		"service_url": "https://10.0.0.10",
+		"sso_domain": "10.0.0.214"
+	}
+}
