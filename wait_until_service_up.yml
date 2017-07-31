@@ -1,0 +1,19 @@
+---
+platform: linux
+
+image_resource:
+  type: docker-image
+  source: 
+    repository: python
+    tag: 2.7-slim
+
+inputs:
+  - name: concourse_tasks
+  - name: vmdk_file
+
+caches:
+  - path: vmdk_file
+
+run:
+  path: python
+  args: ["concourse_tasks/setup_nsp.py","--wait_for_service","-c","nsp_config.json"]

@@ -508,9 +508,18 @@ if __name__ == '__main__':
 	config_file = parseInputCommand(len(sys.argv),sys.argv)
 	nsp_obj = parseConfigFile(config_file)
 	if "--nsp_deploy" in sys.argv:
-		deployNSP(nsp_obj)
-		print "Sleeping for 10 mins for OVF deployment"
+		print "Stage 1: Deploying NSP OVF on VC"
+		#deployNSP(nsp_obj)
+		#print "Sleeping for 10 mins for OVF deployment"
 		# TODO: Add the logic for the GET call on the nsp ip to make sure that the NSP is working
-		time.sleep(300)
+		#time.sleep(300)
 		# add vc, nsx, network service platform, sso
-	setup_main(nsp_obj)
+	if "--wait_for_service" in sys.argv:
+		print "Stage 2: Waiting for NSP services to come up"
+	if "--configure_basic" in sys.argv:
+		print "Stage 3: Adding VC, NSX and Proxy details"
+	if "--restart_service":
+		print "Stage 4: Restarting web and app engine after adding details"
+	if "--api_config":
+		print "Stage 5: Configuring roles, networks and fleet of NSP"
+	#setup_main(nsp_obj)
