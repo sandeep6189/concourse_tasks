@@ -1,0 +1,14 @@
+---
+resources:
+- name: concourse_tasks
+  type: git
+  source:
+    uri: https://github.com/sandeep6189/concourse_tasks.git
+
+jobs:
+- name: setup_nsp
+  public: true
+  plan:
+  - get: concourse_tasks
+  - task: deploy_nsp
+    file: deploy_nsp.yml

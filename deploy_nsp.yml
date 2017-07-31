@@ -1,0 +1,10 @@
+---
+platform: linux
+
+image_resource:
+  type: docker-image
+  source: {repository: busybox}
+
+run:
+  path: ./dbc/sc-dbc1213/agarwallas/automation/setup_nsp.py
+  args: ["--nsp_deploy","-c","nsp_config.json"]
