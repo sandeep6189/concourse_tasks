@@ -9,10 +9,6 @@ image_resource:
 
 inputs:
   - name: concourse_tasks
-  - name: vmdk_file
-
-caches:
-  - path: vmdk_file
 
 run:
   path: python
