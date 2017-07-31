@@ -29,9 +29,9 @@
 			"network": "SDDC-DPortGroup-Mgmt",
 			"gateway": "10.0.0.250",
 			"ntp": "10.0.0.4",
-			"ovf_path": "/dbc/sc-dbc1213/agarwallas/nsp/nsp.ovf",
+			"ovf_path": "concourse_tasks/nsp.ovf",
 			"vm_name": "onprem_nsp",
-			"ovftool_exe_path": "/build/toolchain/lin64/ovftool-4.1.0/ovftool"
+			"ovftool_exe_path": "concourse_tasks/ovftool"
 		},
 		"networks":{
 			"name": "External2",
