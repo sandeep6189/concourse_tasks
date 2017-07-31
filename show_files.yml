@@ -10,4 +10,4 @@ inputs:
 
 run:
   path: ls
-  args: ["-l","/dbc/sc-dbc1213/agarwallas/automation"]
+  args: ["-l"]
