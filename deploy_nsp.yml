@@ -5,6 +5,9 @@ image_resource:
   type: docker-image
   source: {repository: busybox}
 
+inputs:
+- name: concourse_tasks
+
 run:
   path: concourse_tasks/setup_nsp.py
   args: ["--nsp_deploy","-c","nsp_config.json"]

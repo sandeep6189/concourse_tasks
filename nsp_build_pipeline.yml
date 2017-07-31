@@ -10,5 +10,7 @@ jobs:
   public: true
   plan:
   - get: concourse_tasks
+  - task: show_files
+    file: concourse_tasks/show_files.yml
   - task: deploy_nsp
     file: concourse_tasks/deploy_nsp.yml
