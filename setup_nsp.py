@@ -528,6 +528,18 @@ def dummy_commits(stage):
 	cmd = "git commit --allow-empty -m %s" % (msg)
 	call(cmd.split())
 
+def check_service_running(url):
+	try:
+		http = urllib3.PoolManager(timeout = 30.0)
+		while True:
+			r = http.request("GET",url)
+			if r.status not in [403,404]:
+				break
+			time.sleep(10)
+	except Exception as e:
+		raise
+	print "Service running now !!"
+
 if __name__ == '__main__':
 	"""
 	config_file = parseInputCommand(len(sys.argv),sys.argv)
@@ -551,7 +563,9 @@ if __name__ == '__main__':
 		deployNSP(nsp_obj)
 	if "--wait_for_service" in sys.argv:
 		print "Stage 2: Waiting for NSP services to come up"
-		time.sleep(400)
+		url = "https://%s" % nsp_obj.config['NSP']['common']['host']
+		check_service_running(url)
+		time.sleep(10)
 	if "--configure_basic" in sys.argv:
 		print "Stage 3: Adding VC, NSX and Proxy details"
 		setup_basic(nsp_obj)
