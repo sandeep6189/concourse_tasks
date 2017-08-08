@@ -5,6 +5,7 @@ image_resource:
   type: docker-image
   source: 
     repository: 10.127.71.136:5000/nsp_deploy
+    insecure_registries: ["10.127.71.136:5000"]
     tag: latest
 
 inputs:
