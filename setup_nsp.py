@@ -15,16 +15,8 @@ import time
 from subprocess import call
 import base64
 import ssh
-
-try:
-	import urllib3
-except ImportError:
-	get_package("urllib3")
-
-try:
-	import datetime
-except ImportError:
-	get_package("datetime")
+import urllib3
+import datetime
 
 def get_package(package_name):
 	cmd = "apt-get install python-%s" % (package_name)
@@ -358,15 +350,20 @@ def get_SiteID_from_NSP(ssh_cli,nsp_obj):
 	nsp_obj.config['NSP']['fleet_site']['siteId'] = stdout.strip()
 	nsp_obj.config['NSP']['fleet_resource']['siteId'] = stdout.strip()
 
-def setup_main(nsp_obj):
-	ssh_cli = SSH_Client(nsp_obj.config['NSP']['common']['host'],nsp_obj.config['NSP']['common']['username'],nsp_obj.config['NSP']['common']['password'],nsp_obj.config['NSP']['common'].get('root_password'))
+def setup_basic(nsp_obj):
 	# Basic Steps
 	nsp_obj.add_vc()
 	nsp_obj.add_nsx()
 	nsp_obj.add_sso()
 	nsp_obj.add_nsp()
-	# More specific steps
+
+def restart_main(nsp_obj):
+	ssh_cli = SSH_Client(nsp_obj.config['NSP']['common']['host'],nsp_obj.config['NSP']['common']['username'],nsp_obj.config['NSP']['common']['password'],nsp_obj.config['NSP']['common'].get('root_password'))
 	restart_services(ssh_cli)
+
+def setup_main(nsp_obj):
+	ssh_cli = SSH_Client(nsp_obj.config['NSP']['common']['host'],nsp_obj.config['NSP']['common']['username'],nsp_obj.config['NSP']['common']['password'],nsp_obj.config['NSP']['common'].get('root_password'))
+
 	nsp_obj.hdmz_config()
 	nsp_obj.config_role()
 	nsp_obj.get_session()
@@ -547,18 +544,20 @@ if __name__ == '__main__':
 		temp = 1
 	setup_main(nsp_obj)
 	"""
+	config_file = parseInputCommand(len(sys.argv),sys.argv)
+	nsp_obj = parseConfigFile(config_file)
 	if "--nsp_deploy" in sys.argv:
 		print "Stage 1: Deploying NSP OVF on VC"
-		dummy_commits("stage 1")
+		deployNSP(nsp_obj)
 	if "--wait_for_service" in sys.argv:
 		print "Stage 2: Waiting for NSP services to come up"
-		dummy_commits("stage 2")
+		time.sleep(400)
 	if "--configure_basic" in sys.argv:
 		print "Stage 3: Adding VC, NSX and Proxy details"
-		dummy_commits("stage 3")
+		setup_basic(nsp_obj)
 	if "--restart_service" in sys.argv:
 		print "Stage 4: Restarting web and app engine after adding details"
-		dummy_commits("stage 4")
+		restart_main(nsp_obj)
 	if "--api_config" in sys.argv:
 		print "Stage 5: Configuring roles, networks and fleet of NSP"
-		dummy_commits("stage 5")
+		setup_main(nsp_obj)
