@@ -14,7 +14,8 @@ PARAMIKO_PATH = "/build/toolchain/noarch/paramiko-1.15.1/lib/python2.7/site-pack
 ECDSA_PATH = "/build/toolchain/noarch/ecdsa-0.10/lib/python2.7/site-packages/"
 sys.path.insert(0, PARAMIKO_PATH)
 sys.path.insert(0, ECDSA_PATH)
-from setup_nsp import get_package
+
+#from setup_nsp import get_package
 try:
     import paramiko
 except ImportError:
@@ -25,8 +26,13 @@ try:
 except ImportError:
     get_package("ecdsa")
     import ecdsa
+
 # Get rid of all paramiko log output below warning.
 logging.getLogger("paramiko").setLevel(logging.WARNING)
+
+def get_package(package_name):
+    cmd = "apt-get install python-%s" % (package_name)
+    call(cmd.split())
 
 class SSH():
     """
