@@ -508,7 +508,9 @@ def parseInputCommand(argc,argv):
 		usage()
 		sys.exit()
 	try:
-		opts,args = getopt.getopt(argv[1:],"hc:d",["config=","help","nsp_deploy"])
+		opts,args = getopt.getopt(argv[1:],"hc:d",["config=","help",
+			"nsp_deploy","wait_for_service","configure_basic","restart_service",
+			"api_config"])
 	except getopt.GetoptError:
 		usage()
 		sys.exit(2)
