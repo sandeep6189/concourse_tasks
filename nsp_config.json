@@ -31,7 +31,7 @@
 			"ntp": "10.0.0.4",
 			"ovf_path": "/etc/nsp_deploy.ova",
 			"vm_name": "onprem_nsp",
-			"ovftool_exe_path": "concourse_tasks/ovftool"
+			"ovftool_exe_path": "concourse_tasks/ovftool-4.1.0/ovftool"
 		},
 		"networks":{
 			"name": "External2",
