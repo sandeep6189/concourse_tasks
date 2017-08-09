@@ -535,11 +535,13 @@ def check_service_running(url):
 	time.sleep(100)
 	max_error_count = 10
 	error_count = 0
-	http = urllib3.PoolManager(timeout = 30.0)
 	while True and error_count < max_error_count:
 		try:
-			r = http.request("GET",url)
-			if r.status not in [403,404]:
+			c = urllib3.HTTPSConnectionPool(url, port=443, cert_reqs='CERT_NONE',
+                                assert_hostname=False)
+			r = c.request("GET","/")
+			if r.status == 403:
+				# By default the service is forbidden on root
 				break
 			time.sleep(10)
 		except urllib3.exceptions.MaxRetryError,e:
@@ -576,7 +578,8 @@ if __name__ == '__main__':
 		#deployNSP(nsp_obj)
 	if "--wait_for_service" in sys.argv:
 		print "Stage 2: Waiting for NSP services to come up"
-		url = "https://%s" % nsp_obj.config['NSP']['common']['host']
+		#url = "https://%s" % nsp_obj.config['NSP']['common']['host']
+		url = nsp_obj.config['NSP']['common']['host']
 		check_service_running(url)
 		time.sleep(10)
 	if "--configure_basic" in sys.argv:
