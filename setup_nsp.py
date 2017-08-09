@@ -531,15 +531,26 @@ def dummy_commits(stage):
 	call(cmd.split())
 
 def check_service_running(url):
-	try:
-		http = urllib3.PoolManager(timeout = 30.0)
-		while True:
+	print "Sleeping for 100 seconds to allow for booting"
+	time.sleep(100)
+	max_error_count = 10
+	error_count = 0
+	http = urllib3.PoolManager(timeout = 30.0)
+	while True and error_count < max_error_count:
+		try:
 			r = http.request("GET",url)
 			if r.status not in [403,404]:
 				break
 			time.sleep(10)
-	except Exception as e:
-		raise
+		except urllib3.exceptions.MaxRetryError,e:
+			print "[MAX-TRY-ERROR]: %s " % (str(e))
+			error_count += 1
+			time.sleep(10)
+		except Exception,e:
+			print "[OTHER-ERROR]: %s " % (str(e))
+			error_count += 1
+			time.sleep(10)
+	
 	print "Service running now !!"
 
 if __name__ == '__main__':
@@ -562,7 +573,7 @@ if __name__ == '__main__':
 	nsp_obj = parseConfigFile(config_file)
 	if "--nsp_deploy" in sys.argv:
 		print "Stage 1: Deploying NSP OVF on VC"
-		deployNSP(nsp_obj)
+		#deployNSP(nsp_obj)
 	if "--wait_for_service" in sys.argv:
 		print "Stage 2: Waiting for NSP services to come up"
 		url = "https://%s" % nsp_obj.config['NSP']['common']['host']
