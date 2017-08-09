@@ -580,7 +580,7 @@ if __name__ == '__main__':
 		print "Stage 2: Waiting for NSP services to come up"
 		#url = "https://%s" % nsp_obj.config['NSP']['common']['host']
 		url = nsp_obj.config['NSP']['common']['host']
-		check_service_running(url)
+		#check_service_running(url)
 		time.sleep(10)
 	if "--configure_basic" in sys.argv:
 		print "Stage 3: Adding VC, NSX and Proxy details"

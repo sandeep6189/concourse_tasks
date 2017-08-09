@@ -13,4 +13,4 @@ inputs:
 
 run:
   path: python
-  args: ["concourse_tasks/setup_nsp.py","--configure_basic","-c","nsp_config.json"]
+  args: ["concourse_tasks/setup_nsp.py","--configure_basic","-c","concourse_tasks/nsp_config.json"]
