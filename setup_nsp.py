@@ -575,12 +575,12 @@ if __name__ == '__main__':
 	nsp_obj = parseConfigFile(config_file)
 	if "--nsp_deploy" in sys.argv:
 		print "Stage 1: Deploying NSP OVF on VC"
-		#deployNSP(nsp_obj)
+		deployNSP(nsp_obj)
 	if "--wait_for_service" in sys.argv:
 		print "Stage 2: Waiting for NSP services to come up"
-		#url = "https://%s" % nsp_obj.config['NSP']['common']['host']
+		url = "https://%s" % nsp_obj.config['NSP']['common']['host']
 		url = nsp_obj.config['NSP']['common']['host']
-		#check_service_running(url)
+		check_service_running(url)
 		time.sleep(10)
 	if "--configure_basic" in sys.argv:
 		print "Stage 3: Adding VC, NSX and Proxy details"
