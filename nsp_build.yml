@@ -5,14 +5,6 @@ resources:
   source:
     uri: https://github.com/sandeep6189/concourse_tasks.git
 
-- name: c_up
-  type: git
-  source:
-    uri: https://github.com/sandeep6189/concourse_tasks.git
-    branch: master
-    username: sandeep6189
-    password: sandeep123
-
 - name: ovf_files
   type: git
   source:
@@ -35,16 +27,11 @@ jobs:
     trigger: true
   - task: time_wait
     file: concourse_tasks/wait_until_service_up.yml
-  - put: c_up
-    params:
-      repository: concourse_tasks
-      username: sandeep6189
 
 - name: add_vc_nsx_proxy_details
   public: true
   plan:
   - get: concourse_tasks
-  - get: c_up
     passed: [wait_for_services]
     trigger: true
   - task: configure_basic
