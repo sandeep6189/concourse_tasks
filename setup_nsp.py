@@ -203,7 +203,8 @@ class NSP_Setup(object):
 
 	def hdmz_config(self):
 		print "1. HDMZ Config: ",
-		url = "https://%s:9443/api/admin/hybridity/hdmz/config" % (self.host)
+		#url = "https://%s:9443/api/admin/hybridity/hdmz/config" % (self.host)
+		url = "https://%s:8443/admin/hybridity/api/global/config" % (self.host)
 		auth_params = "%s:%s" % (self.username,self.password)
 		body = {
 			"replicationMode" : "UNICAST_MODE"
@@ -575,19 +576,19 @@ if __name__ == '__main__':
 	nsp_obj = parseConfigFile(config_file)
 	if "--nsp_deploy" in sys.argv:
 		print "Stage 1: Deploying NSP OVF on VC"
-		deployNSP(nsp_obj)
+		#deployNSP(nsp_obj)
 	if "--wait_for_service" in sys.argv:
 		print "Stage 2: Waiting for NSP services to come up"
-		url = "https://%s" % nsp_obj.config['NSP']['common']['host']
-		url = nsp_obj.config['NSP']['common']['host']
-		check_service_running(url)
-		time.sleep(10)
+		#url = "https://%s" % nsp_obj.config['NSP']['common']['host']
+		#url = nsp_obj.config['NSP']['common']['host']
+		#check_service_running(url)
+		#time.sleep(10)
 	if "--configure_basic" in sys.argv:
 		print "Stage 3: Adding VC, NSX and Proxy details"
-		setup_basic(nsp_obj)
+		#setup_basic(nsp_obj)
 	if "--restart_service" in sys.argv:
 		print "Stage 4: Restarting web and app engine after adding details"
-		restart_main(nsp_obj)
+		#restart_main(nsp_obj)
 	if "--api_config" in sys.argv:
 		print "Stage 5: Configuring roles, networks and fleet of NSP"
 		setup_main(nsp_obj)
