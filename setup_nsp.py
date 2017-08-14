@@ -210,7 +210,10 @@ class NSP_Setup(object):
 			"replicationMode" : "UNICAST_MODE"
 		}
 		# make headers
-		headers = urllib3.util.make_headers(basic_auth=auth_params)
+		#headers = urllib3.util.make_headers(basic_auth=auth_params)
+		headers = {
+			"x-hm-authorization": self.x_hm_token
+		}
 		self.call(url, headers, body, "PUT")
 
 	def config_role(self):
@@ -365,9 +368,9 @@ def restart_main(nsp_obj):
 def setup_main(nsp_obj):
 	ssh_cli = SSH_Client(nsp_obj.config['NSP']['common']['host'],nsp_obj.config['NSP']['common']['username'],nsp_obj.config['NSP']['common']['password'],nsp_obj.config['NSP']['common'].get('root_password'))
 
+	nsp_obj.get_session()
 	nsp_obj.hdmz_config()
 	nsp_obj.config_role()
-	nsp_obj.get_session()
 	nsp_obj.set_license()
 	nsp_obj.deployContainter(nsp_obj.config['NSP']['container']['global_name'],
 		True)
