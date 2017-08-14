@@ -278,7 +278,7 @@ class NSP_Setup(object):
 	def deployContainter(self,name,isGlobal):
 		print "5. Deploying Containers: ",
 		# TODO : Add datastore,resource pool as a list in the config
-		url = "https://%s:9443/api/admin/global/deploymentContainers" % (self.host)
+		url = "https://%s:8443/admin/hybridity/api/global/deploymentContainers" % (self.host)
 		body = {
 			'datastores': [self.config['NSP']['container']['datastore']],
 			'folder': self.config['NSP']['container']['folder'],
@@ -369,9 +369,9 @@ def setup_main(nsp_obj):
 	ssh_cli = SSH_Client(nsp_obj.config['NSP']['common']['host'],nsp_obj.config['NSP']['common']['username'],nsp_obj.config['NSP']['common']['password'],nsp_obj.config['NSP']['common'].get('root_password'))
 
 	nsp_obj.get_session()
-	nsp_obj.hdmz_config()
-	nsp_obj.config_role()
-	nsp_obj.set_license()
+	#nsp_obj.hdmz_config()
+	#nsp_obj.config_role()
+	#nsp_obj.set_license()
 	nsp_obj.deployContainter(nsp_obj.config['NSP']['container']['global_name'],
 		True)
 	nsp_obj.deployContainter(nsp_obj.config['NSP']['container']['local_name'],
