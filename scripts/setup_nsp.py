@@ -369,9 +369,9 @@ def setup_main(nsp_obj):
 	ssh_cli = SSH_Client(nsp_obj.config['NSP']['common']['host'],nsp_obj.config['NSP']['common']['username'],nsp_obj.config['NSP']['common']['password'],nsp_obj.config['NSP']['common'].get('root_password'))
 
 	nsp_obj.get_session()
-	#nsp_obj.hdmz_config()
-	#nsp_obj.config_role()
-	#nsp_obj.set_license()
+	nsp_obj.hdmz_config()
+	nsp_obj.config_role()
+	nsp_obj.set_license()
 	nsp_obj.deployContainter(nsp_obj.config['NSP']['container']['global_name'],
 		True)
 	nsp_obj.deployContainter(nsp_obj.config['NSP']['container']['local_name'],
@@ -561,37 +561,24 @@ def check_service_running(url):
 
 if __name__ == '__main__':
 	"""
-	config_file = parseInputCommand(len(sys.argv),sys.argv)
-	nsp_obj = parseConfigFile(config_file)
-	if "--nsp_deploy" in sys.argv:
-		# stage 1
-		deployNSP(nsp_obj)
-		print "Sleeping for 10 mins for OVF deployment"
-		sys.exit(2)
-		# add vc, nsx, network service platform, sso
-	if "--wait_for_service" in sys.argv:
-		# stage 2
-		# TODO: Add the logic for the GET call on the nsp ip to make sure that the NSP is working
-		temp = 1
-	setup_main(nsp_obj)
 	"""
 	config_file = parseInputCommand(len(sys.argv),sys.argv)
 	nsp_obj = parseConfigFile(config_file)
 	if "--nsp_deploy" in sys.argv:
 		print "Stage 1: Deploying NSP OVF on VC"
-		#deployNSP(nsp_obj)
+		deployNSP(nsp_obj)
 	if "--wait_for_service" in sys.argv:
 		print "Stage 2: Waiting for NSP services to come up"
 		#url = "https://%s" % nsp_obj.config['NSP']['common']['host']
-		#url = nsp_obj.config['NSP']['common']['host']
-		#check_service_running(url)
-		#time.sleep(10)
+		url = nsp_obj.config['NSP']['common']['host']
+		check_service_running(url)
+		time.sleep(30) # sleeping extra few seconds for buffer
 	if "--configure_basic" in sys.argv:
 		print "Stage 3: Adding VC, NSX and Proxy details"
-		#setup_basic(nsp_obj)
+		setup_basic(nsp_obj)
 	if "--restart_service" in sys.argv:
 		print "Stage 4: Restarting web and app engine after adding details"
-		#restart_main(nsp_obj)
+		restart_main(nsp_obj)
 	if "--api_config" in sys.argv:
 		print "Stage 5: Configuring roles, networks and fleet of NSP"
 		setup_main(nsp_obj)

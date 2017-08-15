@@ -5,19 +5,13 @@ resources:
   source:
     uri: https://github.com/sandeep6189/concourse_tasks.git
 
-- name: ovf_files
-  type: git
-  source:
-    uri: https://github.com/sandeep6189/concourse_tasks.git
-
 jobs:
 - name: deploy_nsp
   public: true
   plan:
   - get: concourse_tasks
-  - get: ovf_files
   - task: deploy_nsp
-    file: concourse_tasks/deploy_nsp.yml
+    file: concourse_tasks/tasks/deploy_nsp.yml
 
 - name: wait_for_services
   public: true
@@ -26,7 +20,7 @@ jobs:
     passed: [deploy_nsp]
     trigger: true
   - task: time_wait
-    file: concourse_tasks/wait_until_service_up.yml
+    file: concourse_tasks/tasks/wait_until_service_up.yml
 
 - name: add_vc_nsx_proxy_details
   public: true
@@ -35,7 +29,7 @@ jobs:
     passed: [wait_for_services]
     trigger: true
   - task: configure_basic
-    file: concourse_tasks/configure_basic.yml
+    file: concourse_tasks/tasks/configure_basic.yml
 
 - name: restart_nsp_services
   public: true
@@ -44,7 +38,7 @@ jobs:
     passed: [add_vc_nsx_proxy_details]
     trigger: true
   - task: restart_service
-    file: concourse_tasks/restart_service.yml
+    file: concourse_tasks/tasks/restart_service.yml
 
 - name: network_and_fleet_config
   public: true
@@ -53,10 +47,4 @@ jobs:
     passed: [restart_nsp_services]
     trigger: true
   - task: config_network_and_fleet
-    file: concourse_tasks/api_config.yml
-
-resource_types:
-- name: dummy
-  type: docker-image
-  source:
-    repository: starkandwayne/dummy-concourse-resource
+    file: concourse_tasks/tasks/api_config.yml
