@@ -1,8 +1,0 @@
-
-# login to the concourse web
-fly -t lite login -c http://192.168.100.4:8080
-
-# set pipeline
-fly -t lite set-pipeline -p hello-world -c hello.yml
-
-#execute task
