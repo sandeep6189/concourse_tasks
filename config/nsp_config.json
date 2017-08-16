@@ -138,7 +138,7 @@
 			"network": "SDDC-DPortGroup-Mgmt",
 			"gateway": "10.0.0.250",
 			"ntp": "10.0.0.4",
-			"ovf_path": "/etc/hcm_deploy.ova/VMware-HCX-Cloud-3.0.0-6244363.ovf",
+			"ovf_path": "/etc/hcm_deploy.ova/VMware-HCX-Enterprise-3.0.0-6244352.ovf",
 			"vm_name": "onprem_hcm",
 			"ovftool_exe_path": "concourse_tasks/ovftool-4.1.0/ovftool"
 		},
