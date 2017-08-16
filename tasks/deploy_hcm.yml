@@ -1,0 +1,16 @@
+---
+platform: linux
+
+image_resource:
+  type: docker-image
+  source: 
+    repository: 10.127.71.136:5000/nsp_deploy
+    insecure_registries: ["10.127.71.136:5000"]
+    tag: latest
+
+inputs:
+  - name: concourse_tasks
+
+run:
+  path: python
+  args: ["concourse_tasks/scripts/setup_nsp.py","--hcm_deploy","-c","concourse_tasks/config/nsp_config.json"]
