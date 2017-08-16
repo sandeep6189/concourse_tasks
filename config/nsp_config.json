@@ -121,5 +121,34 @@
 		"provider_type":"PSC",
 		"service_url": "https://10.0.0.10",
 		"sso_domain": "10.0.0.214"
+	},
+	"HCM":{
+		"common":{
+			"host":"10.0.0.213",
+			"username": "admin",
+			"password": "VMware123!",
+			"root_password": "VMware123!"
+		},
+		"deploy":{
+			"vm_folder": "/",
+			"hostname": "hcm.vrack.evolabs.corp",
+			"dns": "10.0.0.4",
+			"datastore":"vsanDatastore",
+			"prefix": "24",
+			"network": "SDDC-DPortGroup-Mgmt",
+			"gateway": "10.0.0.250",
+			"ntp": "10.0.0.4",
+			"ovf_path": "/etc/hcm_deploy.ova/VMware-HCX-Cloud-3.0.0-6244363.ovf",
+			"vm_name": "onprem_hcm",
+			"ovftool_exe_path": "concourse_tasks/ovftool-4.1.0/ovftool"
+		},
+		"VC":{
+			"host":"10.0.0.5",
+			"username": "administrator@vsphere.local",
+			"password": "VMware123!",
+			"uuid": "10.127.71.136:5000/nsp_deploy",
+			"datacenter_name": "SDDC-Datacenter",
+			"cluster_name": "vRack-Cluster"
+		}
 	}
 }

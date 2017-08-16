@@ -389,9 +389,14 @@ def setup_main(nsp_obj):
 	print "Steps to follow"
 
 # stage 1
-def deployNSP(nsp_obj):
+def deployOVF(nsp_obj,deploy_json,vc_json,auth_json):
+	"""
+	For ex - 
+	auth_json = cfg['NSP']['common']
+	deploy_json = cfg['HCM']['deploy']
+	vc_json = cfg['VC']
+	"""
 	# TODO: add validations
-	cfg = nsp_obj.config
 	cmd = ("%s"
 	 	" --vService:installation=com.vmware.vim.vsm:extension_vservice"
 	 	" --prop:mgr_root_passwd=%s"
@@ -423,37 +428,29 @@ def deployNSP(nsp_obj):
 	 	" --prop:enable_sshd=True"
 	 	" %s" # abs path of the ovf file
 	 	"  vi://%s:%s@%s/%s/host/%s/Resources") % (
-	 		cfg["NSP"]["deploy"]["ovftool_exe_path"],
-	 		cfg["NSP"]["common"]["password"],
-	 		cfg["NSP"]["deploy"]["hostname"],
-	 		cfg["NSP"]["deploy"]["vm_folder"],
-	 		cfg["NSP"]["common"]["host"],
-	 		cfg["NSP"]["deploy"]["dns"],
-	 		cfg["NSP"]["common"]["password"],
-	 		cfg["NSP"]["deploy"]["datastore"],
-	 		cfg["NSP"]["deploy"]["prefix"],
-	 		cfg["NSP"]["deploy"]["network"],
-	 		cfg["NSP"]["deploy"]["vm_name"],
-	 		cfg["NSP"]["deploy"]["gateway"],
-	 		cfg["NSP"]["common"]["password"],
-	 		cfg["NSP"]["deploy"]["ntp"],
-	 		cfg["NSP"]["deploy"]["ovf_path"],
-	 		cfg["VC"]["username"],
-	 		cfg["VC"]["password"],
-	 		cfg["VC"]["host"],
-	 		cfg["VC"]["datacenter_name"],
-	 		cfg["VC"]["cluster_name"]
+	 		deploy_json["ovftool_exe_path"],
+	 		auth_json["password"],
+	 		deploy_json["hostname"],
+	 		deploy_json["vm_folder"],
+	 		auth_json["host"],
+	 		deploy_json["dns"],
+	 		auth_json["password"],
+	 		deploy_json["datastore"],
+	 		deploy_json["prefix"],
+	 		deploy_json["network"],
+	 		deploy_json["vm_name"],
+	 		deploy_json["gateway"],
+	 		auth_json["password"],
+	 		deploy_json["ntp"],
+	 		deploy_json["ovf_path"],
+	 		vc_json["username"],
+	 		vc_json["password"],
+	 		vc_json["host"],
+	 		vc_json["datacenter_name"],
+	 		vc_json["cluster_name"]
 	 	)
 	print cmd,"\n"
 	call(cmd.split())
-
-# stage 2
-def serviceAvailabilityCheck(url):
-	"""
-	serviceAvailabilityCheck: Wait until the service is available
-
-	"""
-
 
 def parseConfigFile(config_file):
 	"""
@@ -514,7 +511,7 @@ def parseInputCommand(argc,argv):
 	try:
 		opts,args = getopt.getopt(argv[1:],"hc:d",["config=","help",
 			"nsp_deploy","wait_for_service","configure_basic","restart_service",
-			"api_config"])
+			"api_config","hcm_deploy","hcm_wait_for_service"])
 	except getopt.GetoptError:
 		usage()
 		sys.exit(2)
@@ -561,24 +558,36 @@ def check_service_running(url):
 
 if __name__ == '__main__':
 	"""
+	1. Sequencing series of steps to deploy and configure NSP and HCM
+
+	#TODO
+	1. Make wait_for_service a common service
+	2. generalise nsp_obj to support HCM side params as well
 	"""
 	config_file = parseInputCommand(len(sys.argv),sys.argv)
 	nsp_obj = parseConfigFile(config_file)
+	cfg = nsp_obj.config
 	if "--nsp_deploy" in sys.argv:
 		print "Stage 1: Deploying NSP OVF on VC"
-		deployNSP(nsp_obj)
+		#deployOVF(nsp_obj,cfg['NSP']['deploy'],cfg['VC'],cfg['NSP']['common'])
 	if "--wait_for_service" in sys.argv:
 		print "Stage 2: Waiting for NSP services to come up"
 		#url = "https://%s" % nsp_obj.config['NSP']['common']['host']
 		url = nsp_obj.config['NSP']['common']['host']
-		check_service_running(url)
+		#check_service_running(url)
 		time.sleep(30) # sleeping extra few seconds for buffer
 	if "--configure_basic" in sys.argv:
 		print "Stage 3: Adding VC, NSX and Proxy details"
-		setup_basic(nsp_obj)
+		#setup_basic(nsp_obj)
 	if "--restart_service" in sys.argv:
 		print "Stage 4: Restarting web and app engine after adding details"
-		restart_main(nsp_obj)
+		#restart_main(nsp_obj)
 	if "--api_config" in sys.argv:
 		print "Stage 5: Configuring roles, networks and fleet of NSP"
-		setup_main(nsp_obj)
+		#setup_main(nsp_obj)
+	if "--hcm_deploy" in sys.argv:
+		deployOVF(nsp_obj,cfg['HCM']['deploy'],cfg['HCM']['VC'],cfg['HCM']['common'])
+	if "--hcm_wait_for_service" in sys.argv:
+		url = nsp_obj.config['HCM']['common']['host']
+		check_service_running(url)
+		time.sleep(30) # sleeping extra few seconds for buffer
