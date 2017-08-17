@@ -12,15 +12,15 @@ def get_system_ip():
 
 def vpn_changes(zip_name,destination,user):
 	# change the VPN file
-
+	my_ip = get_system_ip()
 	# 1. add config
 	f = "/root/VPN-files/client.ovpn"
 	new_conf = "push \"redirectl-gateway def1\"\n"
-	my_ip = get_system_ip()
+	dir_name = "/root/VPN-files"
 	# change the IP
 	with open(f,"r+") as fd:
 		lines = fd.readlines()
-		if new_conf not in lines:
+		if not new_conf in lines:
 			lines.append(new_conf) # add new conf file as well
 		fd.seek(0)
 		for line in lines:
@@ -95,3 +95,5 @@ def parseInputCommand(argc,argv):
 if __name__ == '__main__':
 	zip_name,destination,username = parseInputCommand(len(sys.argv),sys.argv)
 	# TODO: add validation here
+	print "zip name: ",zip_name," destination_host: ",destination, " username: ",username
+	vpn_changes(zip_name,destination,username)
