@@ -577,6 +577,7 @@ if __name__ == '__main__':
 	1. Make wait_for_service a common service
 	2. generalise nsp_obj to support HCM side params as well
 	"""
+	print "Test Hello"
 	config_file = parseInputCommand(len(sys.argv),sys.argv)
 	nsp_obj = parseConfigFile(config_file)
 	cfg = nsp_obj.config
