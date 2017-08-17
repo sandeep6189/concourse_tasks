@@ -124,7 +124,7 @@ class NSP_Setup(object):
 					"config": {
 						"url": "https://%s" % (vc_json['host']),
 						"userName": vc_json['username'],
-						"password": base64.b64encode(self.vc_json['password'])
+						"password": base64.b64encode(vc_json['password'])
 					}
 				}]
 			}
@@ -583,7 +583,7 @@ if __name__ == '__main__':
 	cfg = nsp_obj.config
 	if "--nsp_deploy" in sys.argv:
 		print "Stage 1: Deploying NSP OVF on VC"
-		deployOVF(nsp_obj,cfg['NSP']['deploy'],cfg['VC'],cfg['NSP']['common'])
+		#deployOVF(nsp_obj,cfg['NSP']['deploy'],cfg['VC'],cfg['NSP']['common'])
 	if "--wait_for_service" in sys.argv:
 		print "Stage 2: Waiting for NSP services to come up"
 		#url = "https://%s" % nsp_obj.config['NSP']['common']['host']
@@ -600,7 +600,8 @@ if __name__ == '__main__':
 		print "Stage 5: Configuring roles, networks and fleet of NSP"
 		setup_main(nsp_obj)
 	if "--hcm_deploy" in sys.argv:
-		deployOVF(nsp_obj,cfg['HCM']['deploy'],cfg['HCM']['VC'],cfg['HCM']['common'])
+		print "Deploying NSP"
+		#deployOVF(nsp_obj,cfg['HCM']['deploy'],cfg['HCM']['VC'],cfg['HCM']['common'])
 	if "--hcm_wait_for_service" in sys.argv:
 		url = nsp_obj.config['HCM']['common']['host']
 		check_service_running(url)

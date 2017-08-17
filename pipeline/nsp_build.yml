@@ -51,3 +51,12 @@ jobs:
     trigger: true
   - task: config_network_and_fleet
     file: concourse_tasks/tasks/api_config.yml
+
+- name: basic_hcm_config
+  public: true
+  plan:
+  - get: concourse_tasks
+    passed: [network_and_fleet_config]
+    trigger: true
+  - task: hcm_basic_config
+    file: concourse_tasks/tasks/hcm_basic.yml
