@@ -149,6 +149,11 @@
 			"uuid": "2fd6ea08-1c95-4f86-813b-f1d9ee8687db",
 			"datacenter_name": "vRack-Datacenter",
 			"cluster_name": "vRack-Cluster"
+		},
+		"LOOKUP":{
+			"provider_type":"PSC",
+			"service_url": "https://10.11.0.35",
+			"sso_domain": "10.11.0.213"
 		}
 	}
 }
