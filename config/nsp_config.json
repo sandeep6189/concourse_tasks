@@ -124,18 +124,18 @@
 	},
 	"HCM":{
 		"common":{
-			"host":"10.0.0.213",
+			"host":"10.11.0.213",
 			"username": "admin",
 			"password": "VMware123!",
 			"root_password": "VMware123!"
 		},
 		"deploy":{
 			"vm_folder": "/",
-			"hostname": "hcm.vrack.evolabs.corp",
+			"hostname": "hcm.vrack.vsphere.local",
 			"dns": "10.11.0.4",
 			"datastore":"vsanDatastore",
 			"prefix": "24",
-			"network": "SDDC-DPortGroup-Mgmt",
+			"network": "vRack-DPortGroup-Mgmt",
 			"gateway": "10.11.0.253",
 			"ntp": "10.11.0.4",
 			"ovf_path": "/etc/hcm_deploy.ova/VMware-HCX-Enterprise-3.0.0-6244352.ovf",
