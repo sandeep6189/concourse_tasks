@@ -146,7 +146,7 @@
 			"host":"10.11.0.26",
 			"username": "administrator@vsphere.local",
 			"password": "c!7DjY+6y@dU~y3^@b",
-			"uuid": "",
+			"uuid": "2fd6ea08-1c95-4f86-813b-f1d9ee8687db",
 			"datacenter_name": "vRack-Datacenter",
 			"cluster_name": "vRack-Cluster"
 		}
