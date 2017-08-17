@@ -114,17 +114,17 @@ class NSP_Setup(object):
 		self.password = self.config['NSP']['password']
 		self.VC_params = self.config['VC']
 
-	def add_vc(self):
+	def add_vc(self,username,password,vc_json,host):
 		print "[BASIC] 1. Adding VC to NSP VM"
-		auth_params = "%s:%s" % (self.username,self.password)
-		url = "https://%s:9443/api/admin/global/config/vcenter" % (self.host)
+		auth_params = "%s:%s" % (username,password)
+		url = "https://%s:9443/api/admin/global/config/vcenter" % (host)
 		body = {
 			"data": {
 				"items": [{
 					"config": {
-						"url": "https://%s" % (self.VC_params['host']),
-						"userName": self.VC_params['username'],
-						"password": base64.b64encode(self.VC_params['password'])
+						"url": "https://%s" % (vc_json['host']),
+						"userName": vc_json['username'],
+						"password": base64.b64encode(self.vc_json['password'])
 					}
 				}]
 			}
@@ -150,9 +150,9 @@ class NSP_Setup(object):
 		headers = urllib3.util.make_headers(basic_auth=auth_params)
 		self.call(url, headers, body, "POST")
 
-	def add_sso(self):
+	def add_sso(self,username,password,lookup_json,host):
 		print "[BASIC] 3. Adding SSO to NSP VM"
-		auth_params = "%s:%s" % (self.username,self.password)
+		auth_params = "%s:%s" % (username,password)
 		url = "https://%s:9443/api/admin/global/config/lookupservice" % (self.host)
 		body = {
 			"data": {
@@ -356,10 +356,23 @@ def get_SiteID_from_NSP(ssh_cli,nsp_obj):
 
 def setup_basic(nsp_obj):
 	# Basic Steps
-	nsp_obj.add_vc()
+	cfg = nsp_obj.config
+	nsp_obj.add_vc(cfg['NSP']['common']['username'],
+		cfg['NSP']['common']['password'],cfg['VC'],cfg['NSP']['common']['host'])
 	nsp_obj.add_nsx()
-	nsp_obj.add_sso()
+	nsp_obj.add_sso(cfg['NSP']['common']['username'],
+		cfg['NSP']['common']['password'],cfg['LOOKUP'],
+		cfg['NSP']['common']['host'])
 	nsp_obj.add_nsp()
+
+def setup_basic_hcm(nsp_obj):
+	#Basic step configuration between
+	nsp_obj.add_vc(cfg['HCM']['common']['username'],
+		cfg['HCM']['common']['password'],cfg['HCM']['VC'],
+		cfg['HCM']['common']['host'])
+	nsp_obj.add_sso(cfg['HCM']['common']['username'],
+		cfg['HCM']['common']['password'],cfg['HCM']['LOOKUP'],
+		cfg['HCM']['common']['host'])
 
 def restart_main(nsp_obj):
 	ssh_cli = SSH_Client(nsp_obj.config['NSP']['common']['host'],nsp_obj.config['NSP']['common']['username'],nsp_obj.config['NSP']['common']['password'],nsp_obj.config['NSP']['common'].get('root_password'))
@@ -591,3 +604,5 @@ if __name__ == '__main__':
 		url = nsp_obj.config['HCM']['common']['host']
 		check_service_running(url)
 		time.sleep(30) # sleeping extra few seconds for buffer
+	if "--hcm_basic_config" in sys.argv:
+		setup_basic_hcm(nsp_obj)
