@@ -60,3 +60,12 @@ jobs:
     trigger: true
   - task: hcm_basic_config
     file: concourse_tasks/tasks/hcm_basic.yml
+
+- name: restart_hcm_services
+  public: true
+  plan:
+  - get: concourse_tasks
+    passed: [basic_hcm_config]
+    trigger: true
+  - task: restart_hcm_service
+    file: concourse_tasks/tasks/restart_hcm_service.yml

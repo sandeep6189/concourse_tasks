@@ -374,8 +374,8 @@ def setup_basic_hcm(nsp_obj):
 		cfg['HCM']['common']['password'],cfg['HCM']['LOOKUP'],
 		cfg['HCM']['common']['host'])
 
-def restart_main(nsp_obj):
-	ssh_cli = SSH_Client(nsp_obj.config['NSP']['common']['host'],nsp_obj.config['NSP']['common']['username'],nsp_obj.config['NSP']['common']['password'],nsp_obj.config['NSP']['common'].get('root_password'))
+def restart_main(nsp_obj,host,username,password,root_password):
+	ssh_cli = SSH_Client(host,username,password,root_password)
 	restart_services(ssh_cli)
 
 def setup_main(nsp_obj):
@@ -524,7 +524,8 @@ def parseInputCommand(argc,argv):
 	try:
 		opts,args = getopt.getopt(argv[1:],"hc:d",["config=","help",
 			"nsp_deploy","wait_for_service","configure_basic","restart_service",
-			"api_config","hcm_deploy","hcm_wait_for_service","hcm_basic_config"])
+			"api_config","hcm_deploy","hcm_wait_for_service","hcm_basic_config",
+			"restart_hcm_server"])
 	except getopt.GetoptError:
 		usage()
 		sys.exit(2)
@@ -583,28 +584,30 @@ if __name__ == '__main__':
 	cfg = nsp_obj.config
 	if "--nsp_deploy" in sys.argv:
 		print "Stage 1: Deploying NSP OVF on VC"
-		#deployOVF(nsp_obj,cfg['NSP']['deploy'],cfg['VC'],cfg['NSP']['common'])
+		deployOVF(nsp_obj,cfg['NSP']['deploy'],cfg['VC'],cfg['NSP']['common'])
 	if "--wait_for_service" in sys.argv:
 		print "Stage 2: Waiting for NSP services to come up"
 		#url = "https://%s" % nsp_obj.config['NSP']['common']['host']
-		#url = nsp_obj.config['NSP']['common']['host']
-		#check_service_running(url)
-		#time.sleep(30) # sleeping extra few seconds for buffer
+		url = nsp_obj.config['NSP']['common']['host']
+		check_service_running(url)
+		time.sleep(30) # sleeping extra few seconds for buffer
 	if "--configure_basic" in sys.argv:
 		print "Stage 3: Adding VC, NSX and Proxy details"
-		#setup_basic(nsp_obj)
+		setup_basic(nsp_obj)
 	if "--restart_service" in sys.argv:
 		print "Stage 4: Restarting web and app engine after adding details"
-		#restart_main(nsp_obj)
+		restart_main(nsp_obj,cfg['NSP']['common']['host'],cfg['NSP']['common']['username'],cfg['NSP']['common']['password'],cfg['NSP']['common'].get('root_password'))
 	if "--api_config" in sys.argv:
 		print "Stage 5: Configuring roles, networks and fleet of NSP"
-		#setup_main(nsp_obj)
+		setup_main(nsp_obj)
 	if "--hcm_deploy" in sys.argv:
 		print "Deploying NSP"
-		#deployOVF(nsp_obj,cfg['HCM']['deploy'],cfg['HCM']['VC'],cfg['HCM']['common'])
+		deployOVF(nsp_obj,cfg['HCM']['deploy'],cfg['HCM']['VC'],cfg['HCM']['common'])
 	if "--hcm_wait_for_service" in sys.argv:
 		url = nsp_obj.config['HCM']['common']['host']
-		#check_service_running(url)
-		#time.sleep(30) # sleeping extra few seconds for buffer
+		check_service_running(url)
+		time.sleep(30) # sleeping extra few seconds for buffer
 	if "--hcm_basic_config" in sys.argv:
 		setup_basic_hcm(nsp_obj)
+	if "--restart_hcm_server" in sys.argv:
+		restart_main(nsp_obj,cfg['HCM']['common']['host'],cfg['HCM']['common']['username'],cfg['HCM']['common']['password'],cfg['HCM']['common'].get('root_password'))
