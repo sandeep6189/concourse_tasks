@@ -360,7 +360,7 @@ class NSP_Setup(object):
 
 	# add registering cloud configs
 	def register_to_nsp(self,host):
-		url = "https://%s:8443/hybridity/api/cloudConfigs" % (host)
+		url = "https://%s:9443/hybridity/api/cloudConfigs" % (host)
 		body = self.config['HCM']['REGISTER']
 		headers = {
 			"x-hm-authorization": self.x_hm_token

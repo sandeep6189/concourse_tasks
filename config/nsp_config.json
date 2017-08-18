@@ -83,8 +83,8 @@
 					"externalNetwork" : {
 						"networkType" : "DistributedVirtualPortgroup",
 						"ipPool" : {
-							"startAddress" : "10.0.0.211",
-							"endAddress" : "10.0.0.215",
+							"startAddress" : "10.0.0.190",
+							"endAddress" : "10.0.0.195",
 							"prefixLength" : 24,
 							"gateway" : "10.0.0.250"
 						},
