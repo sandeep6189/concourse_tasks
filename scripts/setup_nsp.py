@@ -436,10 +436,8 @@ def setup_main(nsp_obj):
 	# Historically, there has been issues with external and mgmt networks being
 	# present in the same network. Create a new dvs port group if you face any issue for the same
 	nsp_obj.fleet_resource_config()
-	nsp_obj.gateway_config()
-	print "Add gateways from the U.I for this time, automate this soon as well"
+	#nsp_obj.gateway_config()
 	print "Congratulations, you have configured NSP"
-	print "Steps to follow"
 
 # stage 1
 def deployOVF(nsp_obj,deploy_json,vc_json,auth_json):
