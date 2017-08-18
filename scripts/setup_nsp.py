@@ -295,6 +295,8 @@ class NSP_Setup(object):
 		resp_data = json.loads(resp.data.decode('utf-8'))
 		if isGlobal:
 			self.container_deployment_id = resp_data['id']
+		else:
+			self.local_deployment_id = resp_data['id']
 
 	def setup_networks(self):
 		print "6. Setup Networks: ",
@@ -304,6 +306,15 @@ class NSP_Setup(object):
 			"x-hm-authorization": self.x_hm_token
 		}
 		resp = self.call(url, headers, body, "POST")
+		# Resp contains jobId :
+		resp_data = json.loads(resp.data.decode('utf-8'))
+		jobId = resp_data['jobId']
+
+		url_to_get_network_id = "https://%s:8443/hybridity/api/jobs/%s" % (self.host,jobId)
+		resp_2 = self.call(url_to_get_network_id, headers, {}, "GET")
+		resp_data = json.loads(resp_2.data.decode('utf-8'))
+		network_id = resp_data['jobData']['objectId']
+		self.network_id = network_id
 
 	def fleet_site_config(self):
 		print "7. Fleet Deployment: ",
@@ -328,6 +339,26 @@ class NSP_Setup(object):
 			"x-hm-authorization": self.x_hm_token
 		}
 		resp = self.call(url, headers, body, "POST")
+
+	def gateway_config(self):
+		url = "https://%s:8443/hybridity/api/gateways" % (self.host)
+		body = self.config['NSP']['gateway']
+		body['interfaces'][0]['networkId'] = self.network_id
+		body['deploymentContainerId'] = self.local_deployment_id
+		headers = {
+			"x-hm-authorization": self.x_hm_token
+		}
+		resp = self.call(url, headers, body, "POST")
+
+	# add registering cloud configs
+	def register_to_nsp(self,host):
+		url = "https://%s:8443/hybridity/api/cloudConfigs" % (host)
+		body = self.config['HCM']['REGISTER']
+		headers = {
+			"x-hm-authorization": self.x_hm_token
+		}
+		resp = self.call(url, headers, body, "POST")
+
 
 def restart_services(ssh_cli):
 	print "Restarting Web and app engine !"
@@ -397,6 +428,7 @@ def setup_main(nsp_obj):
 	# Historically, there has been issues with external and mgmt networks being
 	# present in the same network. Create a new dvs port group if you face any issue for the same
 	nsp_obj.fleet_resource_config()
+	nsp_obj.gateway_config()
 	print "Add gateways from the U.I for this time, automate this soon as well"
 	print "Congratulations, you have configured NSP"
 	print "Steps to follow"
@@ -525,7 +557,7 @@ def parseInputCommand(argc,argv):
 		opts,args = getopt.getopt(argv[1:],"hc:d",["config=","help",
 			"nsp_deploy","wait_for_service","configure_basic","restart_service",
 			"api_config","hcm_deploy","hcm_wait_for_service","hcm_basic_config",
-			"restart_hcm_server"])
+			"restart_hcm_server","register_nsp"])
 	except getopt.GetoptError:
 		usage()
 		sys.exit(2)
@@ -601,15 +633,17 @@ if __name__ == '__main__':
 		print "Stage 5: Configuring roles, networks and fleet of NSP"
 		setup_main(nsp_obj)
 	if "--hcm_deploy" in sys.argv:
-		print "Deploying NSP"
-		deployOVF(nsp_obj,cfg['HCM']['deploy'],cfg['HCM']['VC'],cfg['HCM']['common'])
+		print "Deploying HCM"
+		#deployOVF(nsp_obj,cfg['HCM']['deploy'],cfg['HCM']['VC'],cfg['HCM']['common'])
 	if "--hcm_wait_for_service" in sys.argv:
 		url = nsp_obj.config['HCM']['common']['host']
 		check_service_running(url)
 		time.sleep(30) # sleeping extra few seconds for buffer
 	if "--hcm_basic_config" in sys.argv:
-		setup_basic_hcm(nsp_obj)
+		print "Adding VC, SSO to HCM"
+		#setup_basic_hcm(nsp_obj)
 	if "--restart_hcm_server" in sys.argv:
 		restart_main(nsp_obj,cfg['HCM']['common']['host'],cfg['HCM']['common']['username'],cfg['HCM']['common']['password'],cfg['HCM']['common'].get('root_password'))
 	if "--register_nsp" in sys.argv:
 		print "Registering NSP: ", cfg['NSP']['common']['host']," on ",cfg['HCM']['common']['host']
+		nsp_obj.register_to_nsp(cfg['HCM']['common']['host'])

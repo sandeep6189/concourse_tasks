@@ -102,6 +102,32 @@
 					}
 				},
 				"resourceDetails" : [ ]
+		},
+		"gateway":{
+			"name" : "vc-edge-1",
+			"interfaces" : [ {
+			  "index" : 0,
+			  "name" : "External2",
+			  "networkId" : "",
+			  "type" : "uplink",
+			  "addressGroups" : [{
+			    "primaryAddress" : "10.0.0.85",
+			    "subnetPrefixLength" : 24,
+			    "subnetMask" : "255.255.255.0"
+			  }],
+			  "isConnected" : true
+			}],
+			"cliSettings" : {
+			  "userName" : "admin",
+			  "password" : "VMware123!",
+			  "remoteAccess" : true
+			},
+			"edgeVmSize" : "compact",
+			"haSettings" : {
+			  "enabled" : true
+			},
+			"scopeId" : "3a21556f-3d18-4fc3-9c05-b0065900e881",
+			"deploymentContainerId" : ""
 		}
 	},
 	"VC":{
@@ -154,6 +180,13 @@
 			"provider_type":"PSC",
 			"service_url": "https://10.11.0.35",
 			"sso_domain": "10.11.0.213"
+		},
+		"REGISTER":{
+			"remote": {
+				"username": "administrator@vsphere.local",
+				"password": "VMware123!",
+				"url": "https://10.0.0.214"
+			}
 		}
 	}
 }
