@@ -7,6 +7,7 @@ TODO: Put url of the confluence page, any architecture diagrams
 1. Reporting Log
 2. replace prints with development logs
 3. Get session tokens in subsequent call. because, the token expires in 10-15 mins
+4. Make Each API call as a task. Makes it easier to redo an API Call
 4. Refactor code to bring each line under 80 chars (code structure) 
 5. Add Resume/Skip feature - Useful when the process dies, API fails and you want to change and build up something :)
 
@@ -311,13 +312,17 @@ class NSP_Setup(object):
 		resp = self.call(url, headers, body, "POST")
 		# Resp contains jobId :
 		resp_data = json.loads(resp.data.decode('utf-8'))
-		jobId = resp_data['jobId']
-
+		jobId = resp_data['data']['jobId']
+		network_id = resp_data['data']['objectId']
+		self.network_id = network_id
+		"""
+		# Alternate way to get the network id
 		url_to_get_network_id = "https://%s:8443/hybridity/api/jobs/%s" % (self.host,jobId)
 		resp_2 = self.call(url_to_get_network_id, headers, {}, "GET")
 		resp_data = json.loads(resp_2.data.decode('utf-8'))
 		network_id = resp_data['jobData']['objectId']
 		self.network_id = network_id
+		"""
 
 	def fleet_site_config(self):
 		print "7. Fleet Deployment: ",
