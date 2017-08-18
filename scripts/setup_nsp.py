@@ -611,3 +611,5 @@ if __name__ == '__main__':
 		setup_basic_hcm(nsp_obj)
 	if "--restart_hcm_server" in sys.argv:
 		restart_main(nsp_obj,cfg['HCM']['common']['host'],cfg['HCM']['common']['username'],cfg['HCM']['common']['password'],cfg['HCM']['common'].get('root_password'))
+	if "--register_nsp" in sys.argv:
+		print "Registering NSP: ", cfg['NSP']['common']['host']," on ",cfg['HCM']['common']['host']

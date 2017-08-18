@@ -69,3 +69,12 @@ jobs:
     trigger: true
   - task: restart_hcm_service
     file: concourse_tasks/tasks/restart_hcm_service.yml
+
+- name: register_nsp
+  public: true
+  plan:
+  - get: concourse_tasks
+    passed: [restart_hcm_services]
+    trigger: true
+  - task: register_nsp
+    file: concourse_tasks/tasks/register_nsp.yml
