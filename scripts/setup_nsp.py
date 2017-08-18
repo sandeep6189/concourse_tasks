@@ -233,25 +233,25 @@ class NSP_Setup(object):
 		}]
 		response_obj = self.call(url, {}, body, "POST")
 
-	def get_session(self):
+	def get_session(self,host,vc_json,nsp=True):
 		print "3. GET SESSION TOKEN: ",
-		url = "https://%s:8443/hybridity/api/sessions" % (self.host)
+		url = "https://%s:8443/hybridity/api/sessions" % (host)
 		
 		# need VC credentials for getting a session token
 		body = {
 			"authType": "password",
-			"username": self.VC_params['username'],
-			"password": self.VC_params['password']
+			"username": vc_json['username'],
+			"password": vc_json['password']
 		}
 		response_obj = self.call(url, {}, body, "POST")
 		# get response x-hm-authorization token from here
-		self.x_hm_token = response_obj.getheader('x-hm-authorization')
+		if nsp:
+			self.x_hm_token = response_obj.getheader('x-hm-authorization')
+		else:
+			self.x_hm_token_hcm = response_obj.getheader('x-hm-authorization')
 
 	def set_license(self):
-		print "4. SETTING LICENCSE ",
-		if not self.x_hm_token:
-			self.get_session_token()
-
+		print "4. SETTING LICENCSE "
 		url = "https://%s:8443/admin/hybridity/api/licenses" % (self.host)
 		body = {
 			'features': [
@@ -360,7 +360,8 @@ class NSP_Setup(object):
 
 	# add registering cloud configs
 	def register_to_nsp(self,host):
-		url = "https://%s:9443/hybridity/api/cloudConfigs" % (host)
+		self.get_session(self.config['HCM']['common']['host'],self.config['HCM']['VC'])
+		url = "https://%s/hybridity/api/cloudConfigs" % (host)
 		body = self.config['HCM']['REGISTER']
 		headers = {
 			"x-hm-authorization": self.x_hm_token
@@ -420,7 +421,7 @@ def restart_main(nsp_obj,host,username,password,root_password):
 def setup_main(nsp_obj):
 	ssh_cli = SSH_Client(nsp_obj.config['NSP']['common']['host'],nsp_obj.config['NSP']['common']['username'],nsp_obj.config['NSP']['common']['password'],nsp_obj.config['NSP']['common'].get('root_password'))
 
-	nsp_obj.get_session()
+	nsp_obj.get_session(nsp_obj.config['NSP']['common']['host'],nsp_obj.config['VC'])
 	nsp_obj.hdmz_config()
 	nsp_obj.config_role()
 	nsp_obj.set_license()
@@ -640,14 +641,14 @@ if __name__ == '__main__':
 		setup_main(nsp_obj)
 	if "--hcm_deploy" in sys.argv:
 		print "Deploying HCM"
-		#deployOVF(nsp_obj,cfg['HCM']['deploy'],cfg['HCM']['VC'],cfg['HCM']['common'])
+		deployOVF(nsp_obj,cfg['HCM']['deploy'],cfg['HCM']['VC'],cfg['HCM']['common'])
 	if "--hcm_wait_for_service" in sys.argv:
 		url = nsp_obj.config['HCM']['common']['host']
 		check_service_running(url)
 		time.sleep(30) # sleeping extra few seconds for buffer
 	if "--hcm_basic_config" in sys.argv:
 		print "Adding VC, SSO to HCM"
-		#setup_basic_hcm(nsp_obj)
+		setup_basic_hcm(nsp_obj)
 	if "--restart_hcm_server" in sys.argv:
 		restart_main(nsp_obj,cfg['HCM']['common']['host'],cfg['HCM']['common']['username'],cfg['HCM']['common']['password'],cfg['HCM']['common'].get('root_password'))
 	if "--register_nsp" in sys.argv:
