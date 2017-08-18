@@ -134,7 +134,7 @@ class NSP_Setup(object):
 			}
 		}
 		headers = urllib3.util.make_headers(basic_auth=auth_params)
-		self.call(url, headers, body, "POST")
+		resp = self.call(url, headers, body, "POST")
 
 	def add_nsx(self):
 		print "[BASIC] 2. Adding NSX to NSP VM"
@@ -407,11 +407,11 @@ def setup_basic(nsp_obj):
 
 def setup_basic_hcm(nsp_obj):
 	#Basic step configuration between
-	nsp_obj.add_vc(cfg['HCM']['common']['username'],
-		cfg['HCM']['common']['password'],cfg['HCM']['VC'],
-		cfg['HCM']['common']['host'])
 	nsp_obj.add_sso(cfg['HCM']['common']['username'],
 		cfg['HCM']['common']['password'],cfg['HCM']['LOOKUP'],
+		cfg['HCM']['common']['host'])
+	nsp_obj.add_vc(cfg['HCM']['common']['username'],
+		cfg['HCM']['common']['password'],cfg['HCM']['VC'],
 		cfg['HCM']['common']['host'])
 
 def restart_main(nsp_obj,host,username,password,root_password):
