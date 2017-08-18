@@ -157,14 +157,14 @@ class NSP_Setup(object):
 	def add_sso(self,username,password,lookup_json,host):
 		print "[BASIC] 3. Adding SSO to NSP VM"
 		auth_params = "%s:%s" % (username,password)
-		url = "https://%s:9443/api/admin/global/config/lookupservice" % (self.host)
+		url = "https://%s:9443/api/admin/global/config/lookupservice" % (host)
 		body = {
 			"data": {
 				"items": [{
 					"config": {
-						"lookupServiceUrl": self.config['LOOKUP']['service_url'],
-						"providerType": self.config['LOOKUP']['provider_type'],
-						"ssoDomain": self.config['LOOKUP']['sso_domain']
+						"lookupServiceUrl": lookup_json['service_url'],
+						"providerType": lookup_json['provider_type'],
+						"ssoDomain": lookup_json['sso_domain']
 					}
 				}]
 			}
