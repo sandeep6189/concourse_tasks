@@ -6,7 +6,10 @@
 TODO: Put url of the confluence page, any architecture diagrams
 1. Reporting Log
 2. replace prints with development logs
-3. Add Resume/Skip feature - Useful when the process dies, API fails and you want to change and build up something :)
+3. Get session tokens in subsequent call. because, the token expires in 10-15 mins
+4. Refactor code to bring each line under 80 chars (code structure) 
+5. Add Resume/Skip feature - Useful when the process dies, API fails and you want to change and build up something :)
+
 """
 
 import json
@@ -96,16 +99,16 @@ class NSP_Setup(object):
 			print "response: ","STATUS: ",r.status," DATA: ",r.data.decode('utf-8')
 			# status check
 			if r.status not in [200,201,202,203,204,205,206]:
-				print "Response status: %s ! Desired status code: 2XX" % (r.status)
-				sys.exit()
+				err_str = "Response status: %s ! Desired status code: 2XX" % (r.status)
+				raise Exception(err_str)
 
 			return r
 		except urllib3.exceptions.MaxRetryError,e:
 			print "[ERROR]: %s " % (str(e))
-			sys.exit()
+			raise
 		except Exception,e:
 			print "[ERROR]: %s " % (str(e))
-			sys.exit(2)
+			raise
 
 	def parse_common_parameters(self):
 		# TODO: parameter validations !! 
